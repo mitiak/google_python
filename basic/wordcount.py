@@ -39,13 +39,61 @@ print_words() and print_top().
 
 import sys
 
-# +++your code here+++
+# Prints the given dictionary by key in sorted order
+def print_dict_by_word(dict):
+  for k in sorted(dict.keys()):
+    print k + ' -> ' + str(dict[k])
+
+
+# Helper function to sort by word count
+def sort_by_cnt(item):
+  return item[1]
+
+# Prints num_to_print items from the given dictionary ordered by words count
+def print_dict_by_cnt(file_dict, num_to_print):
+  cnt_printed = 0
+  for i in sorted(file_dict.items(), key=sort_by_cnt, reverse=True):
+    print i[0] + ' -> ' + str(i[1])
+    cnt_printed += 1
+    if cnt_printed == num_to_print:
+      break
+
+# Builds the dictionary from the given file
+def build_dict(filename):
+  res_dict = {}
+  file = open(filename, 'rU')
+
+  if file == None:
+     return
+
+  txt_filetext = file.read()
+  lst_words = txt_filetext.split()
+
+  for word in lst_words:
+    word = word.lower()
+    if word in res_dict.keys():
+      res_dict[word] += 1
+    else:
+      res_dict[word] = 1
+
+  file.close()
+  return res_dict
+
 # Define print_words(filename) and print_top(filename) functions.
 # You could write a helper utility function that reads a file
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
 
-###
+def print_top(filename):
+  file_dict = build_dict(filename)
+  print_dict_by_cnt(file_dict, 5)
+  return
+
+def print_words(filename):
+  file_dict = build_dict(filename)
+  print_dict_by_word(file_dict)
+  return
+
 
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.

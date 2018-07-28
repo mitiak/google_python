@@ -15,10 +15,35 @@ import commands
 """Copy Special exercise
 """
 
-# +++your code here+++
-# Write functions and modify main() to call them
+def ListSpecial(dir):
+  filenames = os.listdir(dir)
+  special_files = []
+  for filename in filenames:
+    match = re.search(r'__\w+__',filename)
+    if match:
+      abspath = os.path.abspath(os.path.join(dir, filename))
+      print abspath
+      special_files.append(abspath)
+  return special_files
 
 
+def CopyToDir(files, todir):
+  # Create the directory if needed
+  cmd = 'ls -l ' + todir
+  (cmd_status, _) = commands.getstatusoutput(cmd)
+  if cmd_status:
+    os.mkdir(todir)
+    print todir + ' created.'
+  else:
+    print todir + ' found.'
+
+  # Copy the files
+  for file in files:
+    print 'shutil.copy('+file+', '+todir+')'
+    shutil.copy(file, todir)
+  return
+  
+  
 
 def main():
   # This basic command line argument parsing code is provided.
@@ -48,8 +73,10 @@ def main():
     print "error: must specify one or more dirs"
     sys.exit(1)
 
-  # +++your code here+++
-  # Call your functions
+  special_files = ListSpecial(args[0])
+
+  if todir:
+    CopyToDir(special_files, todir)
   
 if __name__ == "__main__":
   main()
